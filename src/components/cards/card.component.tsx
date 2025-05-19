@@ -27,6 +27,8 @@ export type CardExternalProps = {
    */
   renderCardContent?(model: CardModel): JSX.Element | null;
 
+  isDropSlot?: boolean;
+
   /**
    * Custom style for the card container.
    */
@@ -76,11 +78,19 @@ class Card extends Component<Props> {
       cardContainerStyle,
       cardTitleTextStyle,
       cardSubtitleTextStyle,
-      cardContentTextStyle
+      cardContentTextStyle,
+      isDropSlot
     } = this.props;
 
     return (
-      <View style={[styles.container, cardContainerStyle, hidden && { opacity: 0 }]}>
+      <View 
+      style={[
+        styles.container,
+        cardContainerStyle,
+        hidden && { opacity: 0 },
+        isDropSlot && styles.dropSlot
+      ]}
+      >
         <TouchableOpacity
           onPress={this.onPress}>
           {renderCardContent &&
@@ -110,6 +120,13 @@ class Card extends Component<Props> {
 export default withKanbanContext(Card);
 
 const styles = StyleSheet.create({
+  dropSlot: {
+    opacity: 1,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderColor: '#007bff',
+    backgroundColor: '#e6f0ff',
+  },
   container: {
     borderColor: '#E3E3E3',
     borderWidth: 1,
