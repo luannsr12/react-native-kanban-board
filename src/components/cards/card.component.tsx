@@ -83,20 +83,21 @@ class Card extends Component<Props> {
     } = this.props;
 
     return (
-      <View 
-      style={[
-        styles.container,
-        cardContainerStyle,
-        hidden && { opacity: 0 },
-        isDropSlot && styles.dropSlot
-      ]}
+      <View
+        style={[
+          styles.container,
+          cardContainerStyle,
+          hidden && { opacity: 0 },
+          isDropSlot && styles.dropSlot
+        ]}
       >
-        <TouchableOpacity
-          onPress={this.onPress}>
-          {renderCardContent &&
-            renderCardContent(model)}
-
-          {!renderCardContent &&
+        <TouchableOpacity onPress={this.onPress} disabled={this.props.isDropSlot}>
+          {this.props.isDropSlot ? (
+            // Slot vazio visual
+            <View style={styles.slotPlaceholder} />
+          ) : renderCardContent ? (
+            renderCardContent(model)
+          ) : (
             <React.Fragment>
               <View style={styles.cardHeaderContainer}>
                 <View style={styles.cardTitleContainer}>
@@ -110,7 +111,8 @@ class Card extends Component<Props> {
               {model.tags && model.tags.length > 0 && (
                 <Tags items={model.tags} />
               )}
-            </React.Fragment>}
+            </React.Fragment>
+          )}
         </TouchableOpacity>
       </View>
     )
@@ -125,6 +127,11 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderWidth: 2,
     borderColor: '#007bff',
+    backgroundColor: '#e6f0ff',
+  },
+  slotPlaceholder: {
+    height: 60,
+    borderRadius: 6,
     backgroundColor: '#e6f0ff',
   },
   container: {
