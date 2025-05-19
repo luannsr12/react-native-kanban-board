@@ -501,7 +501,7 @@ class KanbanBoard extends React.Component<Props, State> {
         style={{
           position: 'absolute',
           left: startingX,
-          top: startingY,
+          top: startingY - 90,
           width: cardWidth - 16,
           transform: [
             { translateX: pan.x },
@@ -530,12 +530,17 @@ class KanbanBoard extends React.Component<Props, State> {
       cardSubtitleTextStyle,
       cardContentTextStyle
     } = this.props;
-
+  
+    const { draggedItem } = this.state;
+  
+    const isDropSlot = item.isHidden && item.id === draggedItem?.id;
+  
     return (
       <Card
         key={item.id}
         model={item}
         hidden={item.isHidden}
+        isDropSlot={isDropSlot}
         onCardPress={this.cardPressed}
         renderCardContent={renderCardContent}
         cardContainerStyle={cardContainerStyle}
@@ -603,6 +608,7 @@ class KanbanBoard extends React.Component<Props, State> {
           <View
             style={styles.boardContainer}
             onLayout={this.setBoardPositionY}>
+              
 
             <WrappedColumnsSnapContainer
               ref={this.carouselRef}
