@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Dimensions,
   TextStyle,
   ViewStyle
 } from 'react-native';
@@ -37,6 +38,12 @@ export type ColumnExternalProps = {
    * Custom style for the column header title text.
    */
   columnHeaderTitleStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Custin footer
+   */
+  renderColumnFooter?: (item: ColumnModel) => JSX.Element;
+
 }
 
 type Props = KanbanContext &
@@ -51,6 +58,9 @@ type Props = KanbanContext &
 
 type State = {
 }
+
+const screenHeight = Dimensions.get('window').height;
+const COLUMN_MAX_HEIGHT = screenHeight - 150;
 
 export class Column extends React.Component<Props, State> {
   scrollingDown: boolean = false;
@@ -124,10 +134,11 @@ export class Column extends React.Component<Props, State> {
       boardState,
       oneColumnWidth,
       columnWidth,
-
+      
       renderEmptyColumn,
       columnHeaderContainerStyle,
-      columnHeaderTitleStyle
+      columnHeaderTitleStyle,
+      renderColumnFooter
     } = this.props;
 
     const items = boardState.columnCardsMap.has(column.id) ? boardState.columnCardsMap.get(column.id)! : [];
@@ -182,8 +193,11 @@ export class Column extends React.Component<Props, State> {
             </View>
           }
         </View>
-
-        {columnContent}
+        
+        <>
+          {columnContent}
+          {renderColumnFooter?.(column)}
+        </>
       </View>
     );
   }
@@ -195,7 +209,8 @@ const styles = StyleSheet.create({
   columnContainer: {
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
-    padding: 8
+    padding: 8,
+    maxHeight: COLUMN_MAX_HEIGHT
   },
   columnHeaderContainer: {
     flexDirection: 'row',
