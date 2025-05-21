@@ -22,6 +22,7 @@ type Props = KanbanContext & {
   renderItem: (item: ColumnModel, singleDataColumnAvailable: boolean) => JSX.Element;
   sliderWidth: number;
   scrollEnabled: boolean;
+  onActiveIndexChange?: (index: number) => void;
 };
 
 type State = {
@@ -65,7 +66,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
       oneColumnActiveItemIndex: activeItemIndex,
       scrollOffsetX: offsetX
     });
-
+    this.props.onActiveIndexChange?.(activeItemIndex);
     this.onScrollEndDrag();
   }
 
