@@ -75,6 +75,8 @@ type State = {
   srcColumnId: string | undefined;
   draggedItemWidth: number;
   draggedItemHeight: number;
+  columnStart: any | null;
+  activeVisibleColumnIndex: number;
 }
 
 class KanbanBoard extends React.Component<Props, State> {
@@ -100,7 +102,9 @@ class KanbanBoard extends React.Component<Props, State> {
       draggedItem: undefined,
       srcColumnId: undefined,
       draggedItemWidth: 0,
-      draggedItemHeight: 0
+      draggedItemHeight: 0,
+      columnStart: null,
+      activeVisibleColumnIndex: 0,
     }
   }
 
@@ -208,7 +212,12 @@ class KanbanBoard extends React.Component<Props, State> {
       return;
     }
 
+   // const columnId = Array.from(this.state.boardState.columnsMap.keys())[this.state.activeVisibleColumnIndex];
+    //const column = this.state.boardState.columnsMap.get(columnId);
     const column = BoardTools.findColumn(boardState, event.nativeEvent.absoluteX);
+
+   this.setState({ columnStart: column?.id });
+
     if (!column) {
       return;
     }
@@ -296,9 +305,13 @@ class KanbanBoard extends React.Component<Props, State> {
         }, snapAfterTimeout);
       }
 
+     // const columnId = Array.from(this.state.boardState.columnsMap.keys())[this.state.activeVisibleColumnIndex];
+     // const targetColumn = this.state.boardState.columnsMap.get(columnId);
+
       const targetColumn = BoardTools.findColumn(boardState, event.nativeEvent.absoluteX);
+
       if (targetColumn) {
-        this.moveCard(draggedItem!, this.dragX, this.dragY, targetColumn);
+        this.moveCard(draggedItem, this.dragX, this.dragY, targetColumn);
         const scrollResult = BoardTools.getScrollingDirection(targetColumn, this.dragY);
 
         if (scrollResult && scrollResult.scrolling) {
@@ -352,37 +365,36 @@ class KanbanBoard extends React.Component<Props, State> {
 
   moveCard(draggedItem: CardModel, _x: number, y: number, targetColumn: ColumnModel) {
     try {
-      const columns = this.state.boardState.columnsMap;
+      const { boardState, columnStart } = this.state;
+      const columns = boardState.columnsMap;
       const fromColumn = columns.get(draggedItem.columnId);
+      const startColumn = columns.get(columnStart);
 
-      if (!targetColumn || !fromColumn) {
+      if (!targetColumn || !fromColumn) return;
+  
+      const targetItems = boardState.columnCardsMap.get(targetColumn.id) ?? [];
+      if (targetItems.find(x => x.isInvalidated)) return;
+
+      const columnId = Array.from(this.state.boardState.columnsMap.keys())[this.state.activeVisibleColumnIndex];
+
+      const columnActive = columns.get(columnId);
+      console.log('colStart:', columnStart, 'from:', fromColumn.id, 'to:', targetColumn.id);
+  
+      // Verifica se mudou de coluna
+      if (fromColumn?.id != columnActive?.id) {
+        console.log('MUDAAAA');
+        this.moveToOtherColumn(draggedItem, fromColumn, columnActive);
         return;
       }
-
-      const targetItems = this.state.boardState.columnCardsMap.get(targetColumn.id) ?? [];
-      if (targetItems.find(x => x.isInvalidated)) {
-        return;
-      }
-
-      if (targetColumn.id !== fromColumn.id) {
-        this.moveToOtherColumn(draggedItem, fromColumn, targetColumn);
-        return;
-      }
-
+  
       const itemAtPosition = BoardTools.getCardAtPosition(targetItems, y, draggedItem.dimensions);
-      if (!itemAtPosition) {
-        return;
-      }
-
-      if (draggedItem.id === itemAtPosition.id) {
-        return;
-      }
-
+      if (!itemAtPosition || draggedItem.id === itemAtPosition.id) return;
+  
       this.moveCardToPosition(draggedItem, itemAtPosition, targetColumn);
     } catch (error) {
-      logError('board actions error:  ' + error)
+      logError('board actions error: ' + error);
     }
-  };
+  }
 
   moveToOtherColumn(item: CardModel, fromColumn: ColumnModel, toColumn: ColumnModel) {
     var newColumnsMap = new Map<string, ColumnModel>(this.state.boardState.columnsMap);
@@ -409,6 +421,7 @@ class KanbanBoard extends React.Component<Props, State> {
       }
     });
 
+    
     requestAnimationFrame(() => {
       BoardTools.validateAndMeasureBoard(this.state.boardState);
     });
@@ -624,6 +637,7 @@ class KanbanBoard extends React.Component<Props, State> {
               oneColumnWidth={this.props.oneColumnWidth}
               cardWidth={this.props.cardWidth}
               displayedColumns={this.props.displayedColumns}
+              onActiveIndexChange={(index) => this.setState({ activeVisibleColumnIndex: index })}
             />
 
             {this.renderDragCard()}
