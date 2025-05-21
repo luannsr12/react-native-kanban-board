@@ -378,11 +378,9 @@ class KanbanBoard extends React.Component<Props, State> {
       const columnId = Array.from(this.state.boardState.columnsMap.keys())[this.state.activeVisibleColumnIndex];
 
       const columnActive = columns.get(columnId);
-      console.log('colStart:', columnStart, 'from:', fromColumn.id, 'to:', targetColumn.id);
-  
+        
       // Verifica se mudou de coluna
       if (fromColumn?.id != columnActive?.id) {
-        console.log('MUDAAAA');
         this.moveToOtherColumn(draggedItem, fromColumn, columnActive);
         return;
       }
