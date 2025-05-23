@@ -40,7 +40,12 @@ export type ColumnExternalProps = {
   columnHeaderTitleStyle?: StyleProp<TextStyle>;
 
   /**
-   * Custin footer
+   * Custom render Header
+   */
+  renderColumnHeader?: (item: ColumnModel) => JSX.Element | null;
+
+  /**
+   * Custom render footer
    */
   renderColumnFooter?: (item: ColumnModel) => JSX.Element;
 
@@ -134,10 +139,11 @@ export class Column extends React.Component<Props, State> {
       boardState,
       oneColumnWidth,
       columnWidth,
-      
+
       renderEmptyColumn,
       columnHeaderContainerStyle,
       columnHeaderTitleStyle,
+      renderColumnHeader,
       renderColumnFooter
     } = this.props;
 
@@ -176,6 +182,8 @@ export class Column extends React.Component<Props, State> {
         );
     }
 
+    const customHeader = renderColumnHeader?.(column);
+
     return (
       <View
         ref={this.setRefColumn}
@@ -185,15 +193,21 @@ export class Column extends React.Component<Props, State> {
             width: singleDataColumnAvailable ? oneColumnWidth : columnWidth,
             marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN
           }]}>
-        <View style={[styles.columnHeaderContainer, columnHeaderContainerStyle]}>
-          <Text style={[styles.columnHeaderTitle, columnHeaderTitleStyle]}>{column.title}</Text>
-          {isWithCountBadge &&
-            <View style={styles.columnHeaderRightContainer}>
-              <Badge value={noOfItems} />
+
+        {customHeader
+          ? customHeader
+          : (
+            <View style={[styles.columnHeaderContainer, columnHeaderContainerStyle]}>
+              <Text style={[styles.columnHeaderTitle, columnHeaderTitleStyle]}>
+                {column.title}
+              </Text>
+              {isWithCountBadge && (
+                <View style={styles.columnHeaderRightContainer}>
+                  <Badge value={noOfItems} />
+                </View>
+              )}
             </View>
-          }
-        </View>
-        
+          )}
         <>
           {columnContent}
           {renderColumnFooter?.(column)}
