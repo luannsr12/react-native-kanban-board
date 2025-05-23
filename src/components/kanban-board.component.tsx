@@ -584,6 +584,7 @@ class KanbanBoard extends React.Component<Props, State> {
         movingMode={movingMode}
         singleDataColumnAvailable={singleDataColumnAvailable}
         renderEmptyColumn={renderEmptyColumn}
+        renderColumnHeader={this.props.renderColumnHeader}
         renderColumnFooter={this.props.renderColumnFooter}
         columnHeaderContainerStyle={columnHeaderContainerStyle}
         columnHeaderTitleStyle={columnHeaderTitleStyle}
