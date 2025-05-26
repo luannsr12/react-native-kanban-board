@@ -558,6 +558,16 @@ class KanbanBoard extends React.Component<Props, State> {
         cardTitleTextStyle={cardTitleTextStyle}
         cardSubtitleTextStyle={cardSubtitleTextStyle}
         cardContentTextStyle={cardContentTextStyle}
+        onLongPress={(model) => {
+          // simula o evento de press com coordenadas
+          this.onDragStart({
+            nativeEvent: {
+              absoluteX: model.dimensions?.x ?? 0,
+              absoluteY: model.dimensions?.y ?? 0,
+              state: rnState.ACTIVE,
+            },
+          } as any);
+        }}
       />
     );
   }
@@ -614,6 +624,7 @@ class KanbanBoard extends React.Component<Props, State> {
     return (
       <GestureHandlerRootView style={[styles.boardContainer, style]}>
         <LongPressGestureHandler
+          enabled={!this.props.disableDrag}
           maxDist={Number.MAX_SAFE_INTEGER}
           onGestureEvent={this.onGestureEvent}
           onHandlerStateChange={this.onHandlerStateChange}>
