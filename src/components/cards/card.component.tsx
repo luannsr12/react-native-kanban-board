@@ -12,7 +12,7 @@ import {
 import { CardModel } from '../../models/card-model';
 import { Tags } from './tags.component';
 import { KanbanContext, withKanbanContext } from '../kanban-context.provider';
-
+import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
 export type CardExternalProps = {
   /**
    * Callback function invoked when the card is pressed.
@@ -28,6 +28,8 @@ export type CardExternalProps = {
   renderCardContent?(model: CardModel): JSX.Element | null;
 
   isDropSlot?: boolean;
+
+  disableDrag?: boolean;
 
   /**
    * Custom style for the card container.
@@ -54,6 +56,7 @@ type Props = CardExternalProps &
   KanbanContext & {
     model: CardModel;
     hidden: boolean;
+    onLongPress?: (model: any) => void;
   };
 
 class Card extends Component<Props> {
@@ -79,42 +82,53 @@ class Card extends Component<Props> {
       cardTitleTextStyle,
       cardSubtitleTextStyle,
       cardContentTextStyle,
-      isDropSlot
+      isDropSlot,
+      disableDrag
     } = this.props;
 
     return (
-      <View
-        style={[
-          styles.container,
-          cardContainerStyle,
-          hidden && { opacity: 0 },
-          isDropSlot && styles.dropSlot
-        ]}
+      <LongPressGestureHandler
+        minDurationMs={600}
+        enabled={!disableDrag}
+        onHandlerStateChange={(event) => {
+          if (event.nativeEvent.state === State.ACTIVE) {
+            this.props.onLongPress?.(this.props.model);
+          }
+        }}
       >
-        <TouchableOpacity onPress={this.onPress} disabled={this.props.isDropSlot}>
-          {this.props.isDropSlot ? (
-            // Slot vazio visual
-            <View style={styles.slotPlaceholder} />
-          ) : renderCardContent ? (
-            renderCardContent(model)
-          ) : (
-            <React.Fragment>
-              <View style={styles.cardHeaderContainer}>
-                <View style={styles.cardTitleContainer}>
-                  <Text style={[cardTitleTextStyle, styles.cardTitleText]}>{model.title}</Text>
+        <View
+          style={[
+            styles.container,
+            cardContainerStyle,
+            hidden && { opacity: 0 },
+            isDropSlot && styles.dropSlot
+          ]}
+        >
+          <TouchableOpacity onPress={this.onPress} disabled={this.props.isDropSlot}>
+            {this.props.isDropSlot ? (
+              // Slot vazio visual
+              <View style={styles.slotPlaceholder} />
+            ) : renderCardContent ? (
+              renderCardContent(model)
+            ) : (
+              <React.Fragment>
+                <View style={styles.cardHeaderContainer}>
+                  <View style={styles.cardTitleContainer}>
+                    <Text style={[cardTitleTextStyle, styles.cardTitleText]}>{model.title}</Text>
+                  </View>
+                  <Text style={[cardSubtitleTextStyle, styles.cardSubtitleText]}>{model.subtitle}</Text>
                 </View>
-                <Text style={[cardSubtitleTextStyle, styles.cardSubtitleText]}>{model.subtitle}</Text>
-              </View>
-              <View style={styles.cardContentContainer}>
-                <Text style={[cardContentTextStyle, styles.cardContentText]}>{model.description}</Text>
-              </View>
-              {model.tags && model.tags.length > 0 && (
-                <Tags items={model.tags} />
-              )}
-            </React.Fragment>
-          )}
-        </TouchableOpacity>
-      </View>
+                <View style={styles.cardContentContainer}>
+                  <Text style={[cardContentTextStyle, styles.cardContentText]}>{model.description}</Text>
+                </View>
+                {model.tags && model.tags.length > 0 && (
+                  <Tags items={model.tags} />
+                )}
+              </React.Fragment>
+            )}
+          </TouchableOpacity>
+        </View>
+      </LongPressGestureHandler>
     )
   }
 }
