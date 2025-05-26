@@ -83,7 +83,7 @@ class Card extends Component<Props> {
       cardSubtitleTextStyle,
       cardContentTextStyle,
       isDropSlot,
-      disableDrag
+      disableDrag = false,
     } = this.props;
 
     return (
