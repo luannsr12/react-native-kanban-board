@@ -199,7 +199,8 @@ export class Column extends React.Component<Props, State> {
           styles.columnContainer, {
             width: singleDataColumnAvailable ? oneColumnWidth : columnWidth,
             maxHeight: columnHeight || COLUMN_MAX_HEIGHT,
-            marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN
+            marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN,
+            flex: 1
           }]}>
 
         {customHeader
