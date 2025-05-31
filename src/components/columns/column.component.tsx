@@ -73,7 +73,7 @@ const screenHeight = Dimensions.get('window').height;
 const topInset = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 40;
 const bottomInset = Platform.OS === 'android' ? 16 : 100;
 
-const COLUMN_MAX_HEIGHT = 600;
+const COLUMN_MAX_HEIGHT = screenHeight - topInset - bottomInset;
 
 export class Column extends React.Component<Props, State> {
 
@@ -170,6 +170,7 @@ export class Column extends React.Component<Props, State> {
     if (noOfItems > 0) {
       columnContent = (
         <FlatList
+          style={{ flexGrow: 1, maxHeight: COLUMN_MAX_HEIGHT }} 
           data={items}
           ref={this.flatList}
           onScroll={this.handleScroll}
@@ -218,8 +219,9 @@ export class Column extends React.Component<Props, State> {
           style={[
             styles.columnContainer, {
               width: singleDataColumnAvailable ? oneColumnWidth : columnWidth,
-              maxHeight: '95%',
+              maxHeight: '90%',
               marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN,
+              marginBottom: 0,
             }]}>
 
           {customHeader
@@ -240,7 +242,7 @@ export class Column extends React.Component<Props, State> {
             {columnContent}
           </>
         </View>
-        <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+        <View style={{ marginTop: 0, position: 'relative',  width: '100%' }}>
           {renderColumnFooter?.(column)}
         </View>
       </View>
