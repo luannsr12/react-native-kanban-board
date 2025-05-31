@@ -65,7 +65,7 @@ type State = {
 }
 
 const screenHeight = Dimensions.get('window').height;
-const COLUMN_MAX_HEIGHT = screenHeight - 150;
+const COLUMN_MAX_HEIGHT = screenHeight - 170;
 
 export class Column extends React.Component<Props, State> {
   scrollingDown: boolean = false;
