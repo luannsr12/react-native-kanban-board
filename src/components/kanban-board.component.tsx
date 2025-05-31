@@ -576,7 +576,7 @@ class KanbanBoard extends React.Component<Props, State> {
     const {
       renderEmptyColumn,
       columnHeaderContainerStyle,
-      columnHeaderTitleStyle
+      columnHeaderTitleStyle,
     } = this.props;
     const {
       movingMode,
@@ -592,6 +592,7 @@ class KanbanBoard extends React.Component<Props, State> {
         renderCardItem={this.renderCard}
         isWithCountBadge={true}
         movingMode={movingMode}
+        columnHeight={this.props.columnHeight}
         singleDataColumnAvailable={singleDataColumnAvailable}
         renderEmptyColumn={renderEmptyColumn}
         renderColumnHeader={this.props.renderColumnHeader}
