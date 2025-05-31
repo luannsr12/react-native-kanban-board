@@ -138,7 +138,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
           snapToInterval={this.props.itemWidth + COLUMN_MARGIN}
           onMomentumScrollEnd={this.onMomentumScrollEnd}>
           {data.map((item, index) => (
-            <View key={`carousel-item-${index}`} style={{ width: this.props.itemWidth, marginRight: COLUMN_MARGIN, maxHeight: '82%' }}>
+            <View key={`carousel-item-${index}`} style={{ width: this.props.itemWidth, marginRight: COLUMN_MARGIN, maxHeight: '80%' }}>
               {this.props.renderItem(item, singleDataColumnAvailable)}
             </View>
           ))}
@@ -164,6 +164,8 @@ export default ColumnSnapContainer;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    maxHeight: '100%',
+    paddingBottom: 5,
   },
   scrollContainer: {
     flexDirection: 'row',
@@ -174,9 +176,9 @@ const styles = StyleSheet.create({
   positionIndicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    height: 20,
+    height: 10,
   },
   positionIndicator: {
-    marginHorizontal: 8,
+    marginHorizontal: 5,
   },
 });
