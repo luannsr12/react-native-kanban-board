@@ -66,6 +66,7 @@ type Props = KanbanContext &
   };
 
 type State = {
+  availableHeight: any,
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -75,6 +76,14 @@ const bottomInset = Platform.OS === 'android' ? 16 : 100;
 const COLUMN_MAX_HEIGHT = 600;
 
 export class Column extends React.Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      availableHeight: 0,
+    };
+  }
+
   scrollingDown: boolean = false;
   flatList: React.RefObject<FlatList<CardModel>> = React.createRef<FlatList<CardModel>>();
   viewabilityConfig: any = {
@@ -151,7 +160,7 @@ export class Column extends React.Component<Props, State> {
       columnHeaderContainerStyle,
       columnHeaderTitleStyle,
       renderColumnHeader,
-      renderColumnFooter
+      renderColumnFooter,
     } = this.props;
 
     const items = boardState.columnCardsMap.has(column.id) ? boardState.columnCardsMap.get(column.id)! : [];
@@ -190,37 +199,50 @@ export class Column extends React.Component<Props, State> {
     }
 
     const customHeader = renderColumnHeader?.(column);
+    this.state = { availableHeight: 0 };
+
+    const FOOTER_SPACE = 60;
+    const columnMaxHeight = this.state.availableHeight > 0
+      ? this.state.availableHeight - FOOTER_SPACE
+      : 500; // valor fallback
 
     return (
-      <View
-        ref={this.setRefColumn}
-        onLayout={this.measureColumn}
-        style={[
-          styles.columnContainer, {
-            width: singleDataColumnAvailable ? oneColumnWidth : columnWidth,
-            maxHeight: columnHeight || COLUMN_MAX_HEIGHT,
-            marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN,
-            flex: 1
-          }]}>
+      <View style={{flex: 1}}>
+        <View
+          ref={this.setRefColumn}
+          onLayout={(event) => {
+            const { height } = event.nativeEvent.layout;
+            this.setState({ availableHeight: height });
+            this.measureColumn();
+          }}
+          style={[
+            styles.columnContainer, {
+              width: singleDataColumnAvailable ? oneColumnWidth : columnWidth,
+              maxHeight: '95%',
+              marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN,
+            }]}>
 
-        {customHeader
-          ? customHeader
-          : (
-            <View style={[styles.columnHeaderContainer, columnHeaderContainerStyle]}>
-              <Text style={[styles.columnHeaderTitle, columnHeaderTitleStyle]}>
-                {column.title}
-              </Text>
-              {isWithCountBadge && (
-                <View style={styles.columnHeaderRightContainer}>
-                  <Badge value={noOfItems} />
-                </View>
-              )}
-            </View>
-          )}
-        <>
-          {columnContent}
+          {customHeader
+            ? customHeader
+            : (
+              <View style={[styles.columnHeaderContainer, columnHeaderContainerStyle]}>
+                <Text style={[styles.columnHeaderTitle, columnHeaderTitleStyle]}>
+                  {column.title}
+                </Text>
+                {isWithCountBadge && (
+                  <View style={styles.columnHeaderRightContainer}>
+                    <Badge value={noOfItems} />
+                  </View>
+                )}
+              </View>
+            )}
+          <>
+            {columnContent}
+          </>
+        </View>
+        <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
           {renderColumnFooter?.(column)}
-        </>
+        </View>
       </View>
     );
   }
@@ -233,7 +255,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     padding: 8,
-    maxHeight: COLUMN_MAX_HEIGHT
   },
   columnHeaderContainer: {
     flexDirection: 'row',
