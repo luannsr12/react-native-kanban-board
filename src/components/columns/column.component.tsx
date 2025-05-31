@@ -40,6 +40,8 @@ export type ColumnExternalProps = {
    */
   columnHeaderTitleStyle?: StyleProp<TextStyle>;
 
+  columnHeight?: number;
+
   /**
    * Custom render Header
    */
@@ -60,16 +62,17 @@ type Props = KanbanContext &
     isWithCountBadge: boolean;
     movingMode: boolean;
     singleDataColumnAvailable: boolean;
+    columnHeight?: number;
   };
 
 type State = {
 }
 
 const screenHeight = Dimensions.get('window').height;
-const topInset = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 50;
-const bottomInset = Platform.OS === 'android' ? 26 : 44;
+const topInset = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 40;
+const bottomInset = Platform.OS === 'android' ? 16 : 100;
 
-const COLUMN_MAX_HEIGHT = screenHeight - topInset - bottomInset - 80;
+const COLUMN_MAX_HEIGHT = 600;
 
 export class Column extends React.Component<Props, State> {
   scrollingDown: boolean = false;
@@ -143,7 +146,7 @@ export class Column extends React.Component<Props, State> {
       boardState,
       oneColumnWidth,
       columnWidth,
-
+      columnHeight,
       renderEmptyColumn,
       columnHeaderContainerStyle,
       columnHeaderTitleStyle,
@@ -195,6 +198,7 @@ export class Column extends React.Component<Props, State> {
         style={[
           styles.columnContainer, {
             width: singleDataColumnAvailable ? oneColumnWidth : columnWidth,
+            height: columnHeight || COLUMN_MAX_HEIGHT,
             marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN
           }]}>
 
