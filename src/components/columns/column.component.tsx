@@ -170,7 +170,7 @@ export class Column extends React.Component<Props, State> {
     if (noOfItems > 0) {
       columnContent = (
         <FlatList
-          style={{ flexGrow: 1, maxHeight: COLUMN_MAX_HEIGHT }} 
+          style={{ flexGrow: 1, maxHeight: COLUMN_MAX_HEIGHT, marginBottom: 30 }} 
           data={items}
           ref={this.flatList}
           onScroll={this.handleScroll}
