@@ -9,9 +9,10 @@ import {
   View,
   Dimensions,
   TextStyle,
-  ViewStyle
+  ViewStyle,
+  Platform,
+  StatusBar
 } from 'react-native';
-
 import EmptyColumn from './empty-column.component';
 import { ColumnModel } from '../../models/column-model';
 import { CardModel } from '../../models/card-model';
@@ -65,7 +66,10 @@ type State = {
 }
 
 const screenHeight = Dimensions.get('window').height;
-const COLUMN_MAX_HEIGHT = screenHeight - 170;
+const topInset = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 50;
+const bottomInset = Platform.OS === 'android' ? 26 : 44;
+
+const COLUMN_MAX_HEIGHT = screenHeight - topInset - bottomInset - 80;
 
 export class Column extends React.Component<Props, State> {
   scrollingDown: boolean = false;
