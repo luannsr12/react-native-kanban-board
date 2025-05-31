@@ -71,7 +71,7 @@ type State = {
 
 const screenHeight = Dimensions.get('window').height;
 const topInset = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 40;
-const bottomInset = Platform.OS === 'android' ? 16 : 100;
+const bottomInset = Platform.OS === 'android' ? 250 : 170;
 
 const COLUMN_MAX_HEIGHT = screenHeight - topInset - bottomInset;
 
