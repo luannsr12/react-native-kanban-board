@@ -138,7 +138,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
           snapToInterval={this.props.itemWidth + COLUMN_MARGIN}
           onMomentumScrollEnd={this.onMomentumScrollEnd}>
           {data.map((item, index) => (
-            <View key={`carousel-item-${index}`} style={{ width: this.props.itemWidth, marginRight: COLUMN_MARGIN }}>
+            <View key={`carousel-item-${index}`} style={{ width: this.props.itemWidth, marginRight: COLUMN_MARGIN, maxHeight: '82%' }}>
               {this.props.renderItem(item, singleDataColumnAvailable)}
             </View>
           ))}
