@@ -23,6 +23,7 @@ type Props = KanbanContext & {
   sliderWidth: number;
   scrollEnabled: boolean;
   onActiveIndexChange?: (index: number) => void;
+  renderColumnFooter?: (item: ColumnModel) => JSX.Element;
 };
 
 type State = {
@@ -114,7 +115,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
   render() {
     const { data, displayedColumns, scrollEnabled, sliderWidth } = this.props;
     const { oneColumnActiveItemIndex } = this.state;
-
+    console.log(data);
     const singleColumnDisplay = displayedColumns === 1;
     const singleDataColumnAvailable = data.length === 1;
 
@@ -132,17 +133,21 @@ export class ColumnSnapContainer extends Component<Props, State> {
           renderToHardwareTextureAndroid={true}
           scrollEnabled={scrollEnabled}
           style={[styles.scrollContainer, { width: sliderWidth }]}
-          contentContainerStyle={[styles.contentContainer, { paddingLeft: COLUMN_MARGIN }]}
+          contentContainerStyle={[styles.contentContainer, { paddingLeft: COLUMN_MARGIN, paddingBottom: Platform.OS === 'ios' ? 34 + 16 : 16 }]}
           horizontal={true}
           scrollEventThrottle={16}
           snapToInterval={this.props.itemWidth + COLUMN_MARGIN}
           onMomentumScrollEnd={this.onMomentumScrollEnd}>
           {data.map((item, index) => (
-            <View key={`carousel-item-${index}`} style={{ width: this.props.itemWidth, marginRight: COLUMN_MARGIN, maxHeight: '80%' }}>
-              {this.props.renderItem(item, singleDataColumnAvailable)}
-            </View>
+              <View key={`carousel-item-${index}`} style={{ width: this.props.itemWidth, paddingBottom: 0, marginRight: COLUMN_MARGIN, maxHeight: '100%' }}>
+                {this.props.renderItem(item, singleDataColumnAvailable)}
+              </View>
           ))}
+
+
         </ScrollView>
+
+        <View style={{ height: 30 }} ></View>
 
         {singleColumnDisplay &&
           <View style={styles.positionIndicatorContainer}>
@@ -164,11 +169,10 @@ export default ColumnSnapContainer;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    maxHeight: '100%',
-    paddingBottom: 5,
   },
   scrollContainer: {
     flexDirection: 'row',
+    paddingBottom: Platform.OS === 'ios' ? 34 + 16 : 16
   },
   contentContainer: {
     paddingVertical: 8,
