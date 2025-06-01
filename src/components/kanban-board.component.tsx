@@ -585,7 +585,6 @@ class KanbanBoard extends React.Component<Props, State> {
 
     return (
       <WrappedColumn
-        style={{height:'100%'}}
         ref={ref => this.columnListViewsMap.set(columnModel.id, ref)}
         key={columnModel.id}
         boardState={boardState}
