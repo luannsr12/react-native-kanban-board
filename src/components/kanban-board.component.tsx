@@ -585,6 +585,7 @@ class KanbanBoard extends React.Component<Props, State> {
 
     return (
       <WrappedColumn
+        style={{height:'100%'}}
         ref={ref => this.columnListViewsMap.set(columnModel.id, ref)}
         key={columnModel.id}
         boardState={boardState}
@@ -648,6 +649,7 @@ class KanbanBoard extends React.Component<Props, State> {
               oneColumnWidth={this.props.oneColumnWidth}
               cardWidth={this.props.cardWidth}
               displayedColumns={this.props.displayedColumns}
+              renderColumnFooter={this.props.renderColumnFooter}
               onActiveIndexChange={(index) => this.setState({ activeVisibleColumnIndex: index })}
             />
 
@@ -661,7 +663,7 @@ class KanbanBoard extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
   boardContainer: {
-    flex: 1
+    flex: 1,
   }
 });
 
