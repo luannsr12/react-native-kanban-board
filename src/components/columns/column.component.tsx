@@ -170,7 +170,6 @@ export class Column extends React.Component<Props, State> {
     if (noOfItems > 0) {
       columnContent = (
         <FlatList
-          style={{ marginBottom: 30 }} 
           data={items}
           ref={this.flatList}
           onScroll={this.handleScroll}
@@ -208,7 +207,7 @@ export class Column extends React.Component<Props, State> {
       : 500; // valor fallback
 
     return (
-      <View style={{height:'95%'}}>
+      <View>
         <View
           ref={this.setRefColumn}
           onLayout={(event) => {
@@ -219,9 +218,8 @@ export class Column extends React.Component<Props, State> {
           style={[
             styles.columnContainer, {
               width: singleDataColumnAvailable ? oneColumnWidth : columnWidth,
-              maxHeight: '100%',
               marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN,
-              marginBottom: 0,
+              paddingBottom: 100,
             }]}>
 
           {customHeader
@@ -242,9 +240,7 @@ export class Column extends React.Component<Props, State> {
             {columnContent}
           </>
         </View>
-        <View style={{ marginTop: 0, position: 'relative',  width: '100%' }}>
-          {renderColumnFooter?.(column)}
-        </View>
+        
       </View>
     );
   }
