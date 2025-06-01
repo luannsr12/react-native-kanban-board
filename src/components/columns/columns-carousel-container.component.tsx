@@ -146,8 +146,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
 
 
         </ScrollView>
-
-        <View style={{ height: 30 }} ></View>
+ 
 
         {singleColumnDisplay &&
           <View style={styles.positionIndicatorContainer}>
@@ -168,11 +167,12 @@ export default ColumnSnapContainer;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: '100%',
   },
   scrollContainer: {
     flexDirection: 'row',
-    paddingBottom: Platform.OS === 'ios' ? 34 + 16 : 16
+    height: '100%',
+    paddingBottom:50,
   },
   contentContainer: {
     paddingVertical: 8,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   positionIndicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    height: 10,
+    
   },
   positionIndicator: {
     marginHorizontal: 5,
