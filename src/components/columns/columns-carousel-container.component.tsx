@@ -115,7 +115,6 @@ export class ColumnSnapContainer extends Component<Props, State> {
   render() {
     const { data, displayedColumns, scrollEnabled, sliderWidth } = this.props;
     const { oneColumnActiveItemIndex } = this.state;
-    console.log(data);
     const singleColumnDisplay = displayedColumns === 1;
     const singleDataColumnAvailable = data.length === 1;
 
@@ -126,27 +125,50 @@ export class ColumnSnapContainer extends Component<Props, State> {
           decelerationRate="fast"
           showsHorizontalScrollIndicator={false}
           overScrollMode="never"
-          automaticallyAdjustContentInsets={true}
+          automaticallyAdjustContentInsets={false}
           directionalLockEnabled={true}
           pinchGestureEnabled={false}
           scrollsToTop={false}
           renderToHardwareTextureAndroid={true}
           scrollEnabled={scrollEnabled}
-          style={[styles.scrollContainer, { width: sliderWidth }]}
-          contentContainerStyle={[styles.contentContainer, { paddingLeft: COLUMN_MARGIN, paddingBottom: Platform.OS === 'ios' ? 34 + 16 : 16 }]}
+          style={[styles.scrollContainer, { width: sliderWidth}]}
+          contentContainerStyle={[styles.contentContainer, { paddingLeft: COLUMN_MARGIN}]}
           horizontal={true}
           scrollEventThrottle={16}
           snapToInterval={this.props.itemWidth + COLUMN_MARGIN}
           onMomentumScrollEnd={this.onMomentumScrollEnd}>
           {data.map((item, index) => (
-              <View key={`carousel-item-${index}`} style={{ width: this.props.itemWidth, paddingBottom: 0, marginRight: COLUMN_MARGIN, maxHeight: '100%' }}>
-                {this.props.renderItem(item, singleDataColumnAvailable)}
+            <View
+              key={`carousel-item-container-${index}`}
+              style={{
+                marginRight: COLUMN_MARGIN,
+                flexDirection: 'column',
+                width: data.length > 1 ? this.props.itemWidth : null 
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  minHeight: 0,
+                  flexDirection: 'column',
+                  
+                }}
+              >
+                <View style={{ flexShrink: 1, minHeight: 0 }}>
+                  {this.props.renderItem(item, singleDataColumnAvailable)}
+                </View>
+
+                <View style={{ flexShrink: 0, minHeight: 50}}>
+                  {this.props.renderColumnFooter?.(item)}
+                </View>
               </View>
+            </View>
+
           ))}
 
 
         </ScrollView>
- 
+
 
         {singleColumnDisplay &&
           <View style={styles.positionIndicatorContainer}>
@@ -167,12 +189,11 @@ export default ColumnSnapContainer;
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    flex: 1,
   },
   scrollContainer: {
     flexDirection: 'row',
-    height: '100%',
-    paddingBottom:50,
+    paddingBottom: 50,
   },
   contentContainer: {
     paddingVertical: 8,
@@ -180,7 +201,7 @@ const styles = StyleSheet.create({
   positionIndicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    
+
   },
   positionIndicator: {
     marginHorizontal: 5,
