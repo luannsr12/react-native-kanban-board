@@ -217,7 +217,7 @@ export class Column extends React.Component<Props, State> {
           }}
           style={[
             styles.columnContainer, {
-              width: singleDataColumnAvailable ? oneColumnWidth : columnWidth,
+              width: singleDataColumnAvailable ? columnWidth + 30 : columnWidth,
               marginRight: singleDataColumnAvailable ? 0 : COLUMN_MARGIN,
               paddingBottom: 100,
             }]}>
