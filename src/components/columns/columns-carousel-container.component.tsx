@@ -143,7 +143,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
               style={{
                 marginRight: COLUMN_MARGIN,
                 flexDirection: 'column',
-                width: data.length > 1 ? this.props.itemWidth : null
+                width: singleDataColumnAvailable ? this.props.columnWidth + 30 : this.props.columnWidth,
               }}
             >
               <View
@@ -151,14 +151,20 @@ export class ColumnSnapContainer extends Component<Props, State> {
                   flex: 1,
                   minHeight: 0,
                   flexDirection: 'column',
-                  
+                  width: singleDataColumnAvailable ? this.props.columnWidth + 30 : this.props.columnWidth,
                 }}
               >
                 <View style={{ flexShrink: 1, minHeight: 0 }}>
                   {this.props.renderItem(item, singleDataColumnAvailable)}
                 </View>
 
-                <View style={{ flexShrink: 0, minHeight: 50}}>
+                <View 
+                   style={{
+                    flexShrink: 0,
+                    minHeight: 50,
+                    width: singleDataColumnAvailable ? this.props.columnWidth + 30 : this.props.columnWidth,
+                  }}
+                >
                   {this.props.renderColumnFooter?.(item)}
                 </View>
               </View>
