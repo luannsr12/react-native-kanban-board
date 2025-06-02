@@ -143,7 +143,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
               style={{
                 marginRight: COLUMN_MARGIN,
                 flexDirection: 'column',
-                width: data.length > 1 ? this.props.itemWidth : null 
+                width: data.length > 1 ? this.props.itemWidth : null
               }}
             >
               <View
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexDirection: 'row',
-    paddingBottom: 50,
+    paddingBottom: 20,
   },
   contentContainer: {
     paddingVertical: 8,
