@@ -132,18 +132,19 @@ export class ColumnSnapContainer extends Component<Props, State> {
           renderToHardwareTextureAndroid={true}
           scrollEnabled={scrollEnabled}
           style={[styles.scrollContainer, { width: sliderWidth}]}
-          contentContainerStyle={[styles.contentContainer, { paddingLeft: COLUMN_MARGIN}]}
+          contentContainerStyle={[styles.contentContainer, {minWidth: this.props.columnWidth, paddingLeft: COLUMN_MARGIN}]}
           horizontal={true}
           scrollEventThrottle={16}
           snapToInterval={this.props.itemWidth + COLUMN_MARGIN}
           onMomentumScrollEnd={this.onMomentumScrollEnd}>
           {data.map((item, index) => (
             <View
-              key={`carousel-item-container-${index}`}
+              key={`carousel-item-container-${index}`} 
               style={{
                 marginRight: COLUMN_MARGIN,
                 flexDirection: 'column',
-                width: singleDataColumnAvailable ? this.props.columnWidth + 30 : this.props.columnWidth,
+                flexShrink: 0,
+                width: this.props.columnWidth,
               }}
             >
               <View
@@ -151,18 +152,19 @@ export class ColumnSnapContainer extends Component<Props, State> {
                   flex: 1,
                   minHeight: 0,
                   flexDirection: 'column',
-                  width: singleDataColumnAvailable ? this.props.columnWidth + 30 : this.props.columnWidth,
+                  width: this.props.columnWidth,
+                  flexGrow: 1
                 }}
               >
                 <View style={{ flexShrink: 1, minHeight: 0 }}>
                   {this.props.renderItem(item, singleDataColumnAvailable)}
                 </View>
-
+ 
                 <View 
                    style={{
                     flexShrink: 0,
                     minHeight: 50,
-                    width: singleDataColumnAvailable ? this.props.columnWidth + 30 : this.props.columnWidth,
+                    width: this.props.columnWidth,
                   }}
                 >
                   {this.props.renderColumnFooter?.(item)}
