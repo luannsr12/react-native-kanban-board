@@ -73,6 +73,7 @@ class Card extends Component<Props> {
     onCardPress(model);
   }
 
+ 
   render() {
     const {
       model,
@@ -87,6 +88,7 @@ class Card extends Component<Props> {
     } = this.props;
 
     return (
+
       <LongPressGestureHandler
         minDurationMs={600}
         enabled={!disableDrag}
@@ -104,14 +106,17 @@ class Card extends Component<Props> {
             isDropSlot && styles.dropSlot
           ]}
         >
-          <TouchableOpacity onPress={this.onPress} disabled={this.props.isDropSlot}>
+          <TouchableOpacity
+            onPress={this.onPress}
+            disabled={this.props.isDropSlot}
+            activeOpacity={0.8}
+          >
             {this.props.isDropSlot ? (
-              // Slot vazio visual
               <View style={styles.slotPlaceholder} />
             ) : renderCardContent ? (
               renderCardContent(model)
             ) : (
-              <React.Fragment>
+              <>
                 <View style={styles.cardHeaderContainer}>
                   <View style={styles.cardTitleContainer}>
                     <Text style={[cardTitleTextStyle, styles.cardTitleText]}>{model.title}</Text>
@@ -124,12 +129,14 @@ class Card extends Component<Props> {
                 {model.tags && model.tags.length > 0 && (
                   <Tags items={model.tags} />
                 )}
-              </React.Fragment>
+              </>
             )}
           </TouchableOpacity>
         </View>
       </LongPressGestureHandler>
-    )
+    );
+
+
   }
 }
 
