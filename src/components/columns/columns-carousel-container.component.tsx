@@ -132,7 +132,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
           renderToHardwareTextureAndroid={true}
           scrollEnabled={scrollEnabled}
           style={[styles.scrollContainer, { width: sliderWidth}]}
-          contentContainerStyle={[styles.contentContainer, {minWidth: this.props.columnWidth, paddingLeft: COLUMN_MARGIN}]}
+          contentContainerStyle={[styles.contentContainer, {paddingLeft: COLUMN_MARGIN}]}
           horizontal={true}
           scrollEventThrottle={16}
           snapToInterval={this.props.itemWidth + COLUMN_MARGIN}
@@ -143,7 +143,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
               style={{
                 marginRight: COLUMN_MARGIN,
                 flexDirection: 'column',
-                flexShrink: 0,
+                flex: 1,
                 width: this.props.columnWidth,
               }}
             >
@@ -153,22 +153,14 @@ export class ColumnSnapContainer extends Component<Props, State> {
                   minHeight: 0,
                   flexDirection: 'column',
                   width: this.props.columnWidth,
-                  flexGrow: 1
+                  flexShrink: 0
                 }}
               >
-                <View style={{ flexShrink: 1, minHeight: 0 }}>
+                <View style={{ flex: 1,  minHeight: 0 }}>
                   {this.props.renderItem(item, singleDataColumnAvailable)}
                 </View>
  
-                <View 
-                   style={{
-                    flexShrink: 0,
-                    minHeight: 50,
-                    width: this.props.columnWidth,
-                  }}
-                >
-                  {this.props.renderColumnFooter?.(item)}
-                </View>
+                
               </View>
             </View>
 
@@ -190,7 +182,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
           </View>}
       </View>
     );
-  }
+  } 
 }
 
 export default ColumnSnapContainer;
