@@ -126,7 +126,7 @@ export class ColumnSnapContainer extends Component<Props, State> {
           decelerationRate="fast"
           showsHorizontalScrollIndicator={false}
           overScrollMode="never"
-          automaticallyAdjustContentInsets={true}
+          automaticallyAdjustContentInsets={false}
           directionalLockEnabled={true}
           pinchGestureEnabled={false}
           scrollsToTop={false}
